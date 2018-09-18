@@ -54,7 +54,20 @@ class Program extends React.Component {
         super(props);
         const {d2, IntegrationStore} = props;
         this.integrationStore = IntegrationStore;
+
+        d2.i18n.translations['id'] = 'Id';
+        d2.i18n.translations['program_name'] = 'Program Name';
+        d2.i18n.translations['last_run'] = 'Last Run';
+        d2.i18n.translations['run'] = 'Run';
+        d2.i18n.translations['schedule'] = 'Schedule';
+        d2.i18n.translations['logs'] = 'Logs';
+        d2.i18n.translations['delete'] = 'Delete';
+        d2.i18n.translations['actions'] = 'Actions';
+        d2.i18n.translations['display_name'] = 'Program Name';
+        d2.i18n.translations['mapping_id'] = 'Mapping Id';
+
         this.integrationStore.setD2(d2);
+
     }
 
     getStepContent = step => {
@@ -114,43 +127,57 @@ class Program extends React.Component {
                                 <div>
                                     <div
                                         className={classes.instructions}>{this.getStepContent(this.integrationStore.activeStep)}</div>
-                                    <div>
-                                        <Button
-                                            disabled={this.integrationStore.activeStep === 0}
-                                            onClick={this.integrationStore.handleBack}
-                                            variant="contained"
-                                            color="primary"
-                                            className={this.integrationStore.activeStep === 0 || this.integrationStore.activeStep === 6 ? classes.hidden : classes.button}
-                                        >
-                                            Back
-                                        </Button>
-                                        <Button
-                                            disabled={this.integrationStore.activeStep === 0}
-                                            onClick={this.integrationStore.saveMapping}
-                                            variant="contained"
-                                            color="primary"
-                                            className={this.integrationStore.activeStep < 2 ? classes.hidden : classes.button}
-                                        >
-                                            Save
-                                        </Button>
-                                        <Button
-                                            disabled={this.integrationStore.disableNext}
-                                            variant="contained"
-                                            color="primary"
-                                            onClick={this.integrationStore.handleNext}
-                                            className={this.integrationStore.activeStep === 1 || this.integrationStore.activeStep === 6 ? classes.hidden : classes.button}
-                                        >
-                                            {this.integrationStore.nextLabel}
-                                        </Button>
 
-                                        <Button
-                                            variant="contained"
-                                            color="primary"
-                                            href={baseUrl}
-                                            className={this.integrationStore.activeStep < 5 ? classes.hidden : classes.button}
-                                        >
-                                            {this.integrationStore.finishLabel}
-                                        </Button>
+                                    <table width="100%">
+                                        <tbody>
+                                        <tr>
+                                            <td width="33%" align="left">
+                                                <Button
+                                                    disabled={this.integrationStore.activeStep === 0}
+                                                    onClick={this.integrationStore.handleBack}
+                                                    variant="contained"
+                                                    color="primary"
+                                                    className={this.integrationStore.activeStep === 0 || this.integrationStore.activeStep === 6 ? classes.hidden : classes.button}
+                                                >
+                                                    Back
+                                                </Button>
+                                            </td>
+                                            <td width="34%" valign="top" align="center">
+                                                <Button
+                                                    disabled={this.integrationStore.activeStep === 0}
+                                                    onClick={this.integrationStore.saveMapping}
+                                                    variant="contained"
+                                                    color="primary"
+                                                    className={this.integrationStore.activeStep < 2 ? classes.hidden : classes.button}
+                                                >
+                                                    Save
+                                                </Button>
+                                            </td>
+                                            <td width="33%" valign="top" align="right">
+                                                <Button
+                                                    disabled={this.integrationStore.disableNext}
+                                                    variant="contained"
+                                                    color="primary"
+                                                    onClick={this.integrationStore.handleNext}
+                                                    className={this.integrationStore.activeStep === 1 || this.integrationStore.activeStep === 6 ? classes.hidden : classes.button}
+                                                >
+                                                    {this.integrationStore.nextLabel}
+                                                </Button>
+
+                                                <Button
+                                                    variant="contained"
+                                                    color="primary"
+                                                    href={baseUrl}
+                                                    className={this.integrationStore.activeStep < 5 ? classes.hidden : classes.button}
+                                                >
+                                                    {this.integrationStore.finishLabel}
+                                                </Button>
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                    <div>
+
                                     </div>
                                 </div>
                             )}

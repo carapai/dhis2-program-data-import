@@ -15,16 +15,23 @@ class Step0 extends React.Component {
         super(props);
         const {IntegrationStore} = props;
         this.integrationStore = IntegrationStore;
-
         this.integrationStore.checkDataStore();
+    }
+
+    componentDidMount() {
+        // this.interval = setInterval(() => this.integrationStore.runAll(), 30000);
+    }
+
+    componentWillUnmount() {
+        // clearInterval(this.interval);
     }
 
     render() {
         return <div>
             <Table
-                columns={['id', 'programName']}
+                columns={['mappingId', 'displayName', 'lastRun']}
                 rows={this.integrationStore.mappings}
-                contextMenuActions={this.integrationStore.multipleCma}
+                contextMenuActions={this.integrationStore.tableActions}
                 primaryAction={this.integrationStore.useSaved}
             />
         </div>

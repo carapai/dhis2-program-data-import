@@ -7,20 +7,20 @@ import registerServiceWorker from './registerServiceWorker';
 
 let baseUrl = '';
 if (process.env.NODE_ENV === 'development') {
-    baseUrl = 'http://localhost:8080/dhis/api/29';
+    baseUrl = 'http://localhost:8080/dhis/';
 } else {
     let urlArray = window.location.pathname.split('/');
     let apiIndex = urlArray.indexOf('api');
     if (apiIndex > 1) {
-        baseUrl = '/' + urlArray[apiIndex - 1] + '/api/29';
+        baseUrl = '/' + urlArray[apiIndex - 1] + '/';
     } else {
-        baseUrl = '/api/29';
+        baseUrl = '/';
     }
 }
 
 
 init({
-    baseUrl
+    baseUrl: baseUrl + 'api/29'
 }).then(d2 => {
     ReactDOM.render(
         <App d2={d2} baseUrl={baseUrl}/>, document.getElementById('root'));

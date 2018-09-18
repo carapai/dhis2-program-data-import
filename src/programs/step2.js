@@ -9,8 +9,8 @@ import LinearProgress from '@material-ui/core/LinearProgress';
 import Button from '@material-ui/core/Button';
 import red from '@material-ui/core/colors/red';
 import Icon from '@material-ui/core/Icon';
-import TextField from '@material-ui/core/TextField';
 import {inject, observer} from "mobx-react";
+import {InputField} from "@dhis2/d2-ui-core";
 
 
 const styles = theme => ({
@@ -25,6 +25,20 @@ const styles = theme => ({
     },
 });
 
+const items = [{
+    value: 'auto',
+    label: 'auto',
+}, {
+    value: 'name',
+    label: 'name',
+}, {
+    value: 'uid',
+    label: 'uid',
+}, {
+    value: 'code',
+    label: 'code',
+}];
+
 @inject('IntegrationStore')
 @observer
 class Step2 extends React.Component {
@@ -35,19 +49,17 @@ class Step2 extends React.Component {
         super(props);
         const {IntegrationStore} = props;
         this.integrationStore = IntegrationStore;
-        this.integrationStore.fetchPrograms();
-
-        if (!this.integrationStore.isTracker) {
-            this.integrationStore.toggleCanCreateEvents();
-        }
     }
 
     render() {
         let progress = '';
-        if (this.integrationStore.uploaded !== null) {
-            progress = <LinearProgress variant="determinate" value={this.integrationStore.uploaded}/>;
-        }
         const {classes} = this.props;
+
+        const {program} = this.integrationStore;
+
+        if (program.uploaded) {
+            progress = <LinearProgress variant="determinate" value={program.uploaded}/>;
+        }
 
         return <table width="100%">
             <tbody>
@@ -66,33 +78,41 @@ class Step2 extends React.Component {
                                     <td valign="top">
                                         <section>
                                             <div className="dropzone">
-                                                <Dropzone onDrop={this.integrationStore.onDrop}>
+                                                <Dropzone
+                                                    accept="text/csv"
+                                                    onDrop={program.onDrop}>
                                                     <p align="center">Drop files here</p>
                                                     <p align="center"><Icon className={classes.icon} color="primary"
                                                                             style={{fontSize: 36}}>
                                                         add_circle
                                                     </Icon></p>
+                                                    <p align="center"
+                                                       style={{color: 'red'}}>{program.uploadMessage}</p>
                                                 </Dropzone>
                                             </div>
                                         </section>
                                     </td>
                                     <td valign="top">
-                                        <TextField
+                                        <InputField
                                             label="URL"
                                             type="text"
                                             fullWidth
-                                            value={this.integrationStore.url}
-                                            onChange={this.integrationStore.handelURLChange}
+                                            value={program.url}
+                                            onChange={(value) => program.handelURLChange(value)}
                                         />
-                                        <br/>
-                                        <br/>
+                                        <InputField
+                                            label="Date filter"
+                                            type="text"
+                                            fullWidth
+                                            value={program.dateFilter}
+                                            onChange={(value) => program.handelDateFilterChange(value)}
+                                        />
                                         <Button
                                             variant="contained"
                                             color="primary"
-                                            onClick={this.integrationStore.pullData}>
+                                            onClick={program.pullData}>
                                             Pull
                                         </Button>
-
                                         {/*<pre>{JSON.stringify(this.integrationStore.data, null, 2)}</pre>*/}
                                     </td>
                                 </tr>
@@ -110,25 +130,39 @@ class Step2 extends React.Component {
                                 <tbody>
                                 <tr>
                                     <td>
-                                        <TextField
+                                        {/*<TextField
                                             label="Header row"
                                             type="number"
                                             fullWidth
-                                            value={this.integrationStore.headerRow}
-                                            onChange={this.integrationStore.handelHeaderRowChange}
+                                            value={program.headerRow}
+                                            onChange={program.handelHeaderRowChange}
+                                        />*/}
+
+                                        <InputField
+                                            label="Header row"
+                                            type="number"
+                                            fullWidth
+                                            value={program.headerRow}
+                                            onChange={(value) => program.handelHeaderRowChange(value)}
                                         />
                                     </td>
                                 </tr>
 
                                 <tr>
                                     <td>
-                                        <TextField
+                                        <InputField
                                             label="Data start row"
                                             type="number"
                                             fullWidth
-                                            value={this.integrationStore.dataStartRow}
-                                            onChange={this.integrationStore.handelDataRowStartChange}
+                                            value={program.dataStartRow}
+                                            onChange={(value) => program.handelDataRowStartChange(value)}
                                         />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <FormHelperText>For Excel, all sheets should have same header and data start
+                                            rows</FormHelperText>
                                     </td>
                                 </tr>
                                 </tbody>
@@ -145,9 +179,9 @@ class Step2 extends React.Component {
                                     <td>
                                         <Select
                                             placeholder="Organisation unit column"
-                                            value={this.integrationStore.orgUnitColumn}
-                                            options={this.integrationStore.columns}
-                                            onChange={this.integrationStore.handleOrgUnitSelectChange}
+                                            value={program.orgUnitColumn}
+                                            options={program.columns}
+                                            onChange={program.handleOrgUnitSelectChange}
                                         />
                                         <FormHelperText>For new tracked entities and events, this column will be
                                             used as organisation unit</FormHelperText>
@@ -157,9 +191,9 @@ class Step2 extends React.Component {
                                     <td>
                                         <Select
                                             placeholder="Identifier scheme"
-                                            value={this.integrationStore.orgUnitStrategy}
-                                            options={this.integrationStore.items}
-                                            onChange={this.integrationStore.handleOrgUnitStrategySelectChange}
+                                            value={program.orgUnitStrategy}
+                                            options={items}
+                                            onChange={program.handleOrgUnitStrategySelectChange}
                                         />
                                         <FormHelperText>Organisation units will searched using uid by default
                                             please change if your organisation unit column is not
@@ -196,9 +230,9 @@ class Step2 extends React.Component {
                     <FormControlLabel
                         control={
                             <Checkbox
-                                disabled={!this.integrationStore.isTracker}
-                                checked={this.integrationStore.createNewEvents}
-                                onChange={this.integrationStore.handleCreateNewEventsCheck}
+                                disabled={!program.isTracker}
+                                checked={program.createNewEvents}
+                                onChange={program.handleCreateNewEventsCheck}
                             />}
                         label="Create new event if not found"
                     />
@@ -207,9 +241,9 @@ class Step2 extends React.Component {
                     <FormControlLabel
                         control={
                             <Checkbox
-                                disabled={!this.integrationStore.isTracker}
-                                checked={this.integrationStore.createNewEnrollments}
-                                onChange={this.integrationStore.handleCreateNewEnrollmentsCheck}
+                                disabled={!program.isTracker}
+                                checked={program.createNewEnrollments}
+                                onChange={program.handleCreateNewEnrollmentsCheck}
                             />}
                         label="Create new enrollment if not found"
                     />
@@ -219,10 +253,10 @@ class Step2 extends React.Component {
                 <td valign="top" width="50%">
                     <Select
                         placeholder="Event date column"
-                        value={this.integrationStore.eventDateColumn}
-                        options={this.integrationStore.columns}
+                        value={program.eventDateColumn}
+                        options={program.columns}
                         // disabled={!createNewEvents}
-                        onChange={this.integrationStore.handleEventDateColumnSelectChange}
+                        onChange={program.handleEventDateColumnSelectChange}
                     />
                     <FormHelperText>Program stage events will updated or created based on this column. Non
                         repeatable with latest values while repeatable with updates if same or new otherwise.
@@ -231,20 +265,20 @@ class Step2 extends React.Component {
                 <td valign="top" width="25%">
                     <Select
                         placeholder="Enrollment date column"
-                        value={this.integrationStore.enrollmentDateColumn}
-                        disabled={!this.integrationStore.createNewEnrollments}
-                        options={this.integrationStore.columns}
-                        onChange={this.integrationStore.handleEnrollmentDateColumnSelectChange}
+                        value={program.enrollmentDateColumn}
+                        disabled={!program.createNewEnrollments}
+                        options={program.columns}
+                        onChange={program.handleEnrollmentDateColumnSelectChange}
                     />
                     <FormHelperText>Should be a valid date<br/>&nbsp;</FormHelperText>
                 </td>
                 <td width="25%">
                     <Select
                         placeholder="Incident date column"
-                        value={this.integrationStore.incidentDateColumn}
-                        disabled={!this.integrationStore.createNewEnrollments}
-                        options={this.integrationStore.columns}
-                        onChange={this.integrationStore.handleIncidentDateColumnSelectChange}
+                        value={program.incidentDateColumn}
+                        disabled={!program.createNewEnrollments}
+                        options={program.columns}
+                        onChange={program.handleIncidentDateColumnSelectChange}
                     />
                     <FormHelperText>Should be a valid date<br/>&nbsp;</FormHelperText>
                 </td>

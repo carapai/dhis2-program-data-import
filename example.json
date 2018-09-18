@@ -1,0 +1,92 @@
+[
+  {
+    "case_id": "case903",
+    "facility_of_origin": "St Francis C H\/C III (HOSFA)- Mityana",
+    "location": "St Francis C H\/C III (HOSFA)- Mityana",
+    "longitude": "32.7638327",
+    "latitude": "0.3804696",
+    "date": "2018-09-13 16:00:16",
+    "status": "IDSR_ST_FORWARDING"
+  },
+  {
+    "case_id": "case9045",
+    "facility_of_origin": "Kikandwa H\/C III",
+    "location": "Kikandwa H\/C III",
+    "longitude": "32.7638327",
+    "latitude": "0.3804696",
+    "date": "2018-09-13 16:01:53",
+    "status": "IDSR_ST_FORWARDING"
+  },
+  {
+    "case_id": "case903",
+    "facility_of_origin": "St Francis C H\/C III (HOSFA)- Mityana",
+    "location": "Mityana Hospital",
+    "longitude": "32.4833424",
+    "latitude": "0.3829073",
+    "date": "2018-09-14 04:50:58",
+    "status": "IDSR_ST_RECEIVING"
+  },
+  {
+    "case_id": "case9045",
+    "facility_of_origin": "Kikandwa H\/C III",
+    "location": "Mityana Hospital",
+    "longitude": "32.4833424",
+    "latitude": "0.3829073",
+    "date": "2018-09-14 04:50:59",
+    "status": "IDSR_ST_RECEIVING"
+  },
+  {
+    "case_id": "case903",
+    "facility_of_origin": "St Francis C H\/C III (HOSFA)- Mityana",
+    "location": "Mityana Hospital",
+    "longitude": "32.6473489",
+    "latitude": "0.3611119",
+    "date": "2018-09-14 11:44:18",
+    "status": "IDSR_ST_RECEIVING"
+  },
+  {
+    "case_id": "test123",
+    "facility_of_origin": "Lulagala H\/C III",
+    "location": "Lulagala H\/C III",
+    "longitude": "32.6508807",
+    "latitude": "0.347207",
+    "date": "2018-09-17 09:50:11",
+    "status": "IDSR_ST_FORWARDING"
+  },
+  {
+    "case_id": "gtx123",
+    "facility_of_origin": "Lulagala H\/C III",
+    "location": "Lulagala H\/C III",
+    "longitude": "32.6473489",
+    "latitude": "0.3611119",
+    "date": "2018-09-17 10:46:15",
+    "status": "IDSR_ST_FORWARDING"
+  },
+  {
+    "case_id": "case01236",
+    "facility_of_origin": "Kikka Yokana H\/C II",
+    "location": "Mityana Hospital",
+    "longitude": "32.6473489",
+    "latitude": "0.3611119",
+    "date": "2018-09-17 13:59:45",
+    "status": "IDSR_ST_RECEIVING"
+  },
+  {
+    "case_id": "test123",
+    "facility_of_origin": "Lulagala H\/C III",
+    "location": "Mityana Hospital",
+    "longitude": "32.7730244",
+    "latitude": "0.3787955",
+    "date": "2018-09-17 17:23:10",
+    "status": "IDSR_ST_RECEIVING"
+  },
+  {
+    "case_id": "test123",
+    "facility_of_origin": "Lulagala H\/C III",
+    "location": "Mityana Hospital",
+    "longitude": "32.7651606",
+    "latitude": "0.372374",
+    "date": "2018-09-17 17:36:21",
+    "status": "IDSR_ST_RECEIVING"
+  }
+]

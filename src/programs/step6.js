@@ -29,15 +29,15 @@ class Step6 extends React.Component {
     constructor(props) {
         super(props);
         const {IntegrationStore} = props;
+        IntegrationStore.program.create();
         this.integrationStore = IntegrationStore;
-        this.integrationStore.create();
     }
 
     render() {
         const {classes} = this.props;
-        const {errors, successes, conflicts} = this.integrationStore.processedResponses;
+        const {errors, successes, conflicts} = this.integrationStore.program.processedResponses;
         return <div>
-            <LinearProgress variant="determinate" value={this.integrationStore.percentageInserted}/>
+            <LinearProgress variant="determinate" value={this.integrationStore.program.percentageInserted}/>
             {/*<pre>{JSON.stringify(this.integrationStore.processedResponses, null, 2)}</pre>*/}
 
             <Tabs>

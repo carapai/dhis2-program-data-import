@@ -28,6 +28,7 @@ class App extends Component {
         return (
             <Provider IntegrationStore={IntegrationStore}>
                 <D2UIApp>
+                    {/*<HeaderExample d2={this.state.d2}/>*/}
                     <Program d2={this.state.d2} baseUrl={this.state.baseUrl}/>
                 </D2UIApp>
             </Provider>

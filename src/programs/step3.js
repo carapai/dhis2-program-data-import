@@ -14,6 +14,12 @@ import Tooltip from '@material-ui/core/Tooltip';
 import {InputField} from '@dhis2/d2-ui-core';
 
 import {inject, observer} from "mobx-react";
+import Button from "@material-ui/core/Button";
+import Dialog from "@material-ui/core/Dialog";
+import DialogTitle from "@material-ui/core/DialogTitle";
+import List from "@material-ui/core/List";
+import ListItem from "@material-ui/core/ListItem";
+import ListItemText from "@material-ui/core/ListItemText";
 
 const styles = theme => ({});
 
@@ -31,77 +37,131 @@ class Step3 extends React.Component {
 
     render() {
         const {classes} = this.props;
+        const {program} = this.integrationStore;
         return <div>
             <InputField
                 label="Filter"
                 type="text"
                 fullWidth
-                value={this.integrationStore.attributesFilter}
-                onChange={(value) => this.integrationStore.filterAttributes(value)}
+                value={program.attributesFilter}
+                onChange={(value) => program.filterAttributes(value)}
             />
             <Table className={classes.table}>
                 <TableHead>
                     <TableRow>
                         <TableCell
-                            sortDirection={this.integrationStore.orderBy === 'displayName' ? this.integrationStore.order : false}>
+                            sortDirection={program.orderBy === 'displayName' ? program.order : false}>
                             <Tooltip
                                 title="Sort"
                                 placement="bottom-start"
                                 enterDelay={300}>
                                 <TableSortLabel
-                                    active={this.integrationStore.orderBy === 'displayName'}
-                                    direction={this.integrationStore.order}
-                                    onClick={this.integrationStore.createSortHandler('displayName')}
+                                    active={program.orderBy === 'displayName'}
+                                    direction={program.order}
+                                    onClick={program.createSortHandler('displayName')}
                                 >
                                     Attribute name
                                 </TableSortLabel>
                             </Tooltip>
                         </TableCell>
                         <TableCell
-                            sortDirection={this.integrationStore.orderBy === 'unique' ? this.integrationStore.order : false}>
+                            sortDirection={program.orderBy === 'unique' ? program.order : false}>
                             <Tooltip
                                 title="Sort"
                                 placement="bottom-start"
                                 enterDelay={300}>
                                 <TableSortLabel
-                                    active={this.integrationStore.orderBy === 'unique'}
-                                    direction={this.integrationStore.order}
-                                    onClick={this.integrationStore.createSortHandler('unique')}
+                                    active={program.orderBy === 'unique'}
+                                    direction={program.order}
+                                    onClick={program.createSortHandler('unique')}
                                 >
                                     Unique
                                 </TableSortLabel>
                             </Tooltip>
                         </TableCell>
                         <TableCell
-                            sortDirection={this.integrationStore.orderBy === 'mandatory' ? this.integrationStore.order : false}>
+                            sortDirection={program.orderBy === 'mandatory' ? program.order : false}>
                             <Tooltip
                                 title="Sort"
                                 placement="bottom-start"
                                 enterDelay={300}>
                                 <TableSortLabel
-                                    active={this.integrationStore.orderBy === 'mandatory'}
-                                    direction={this.integrationStore.order}
-                                    onClick={this.integrationStore.createSortHandler('mandatory')}
+                                    active={program.orderBy === 'mandatory'}
+                                    direction={program.order}
+                                    onClick={program.createSortHandler('mandatory')}
                                 >
                                     Mandatory
                                 </TableSortLabel>
                             </Tooltip>
                         </TableCell>
                         <TableCell>Attribute mapping</TableCell>
+                        <TableCell>Options Mapping</TableCell>
                     </TableRow>
                 </TableHead>
                 <TableBody>
-                    {this.integrationStore.programAttributes.slice(this.integrationStore.page * this.integrationStore.rowsPerPage,
-                        this.integrationStore.page * this.integrationStore.rowsPerPage +
-                        this.integrationStore.rowsPerPage).map(n => {
+                    {program.programAttributes.map(n => {
+                        let de = '';
+                        if (n.trackedEntityAttribute.optionSet) {
+                            de = <div>
+                                <Button onClick={n.handleClickOpen}>Map Options</Button>
+
+                                <Dialog onClose={n.handleClose} open={n.open}
+                                        aria-labelledby="simple-dialog-title">
+                                    <DialogTitle id="simple-dialog-title">Mapping options</DialogTitle>
+                                    <div>
+                                        <Table className={classes.table}>
+                                            <TableHead>
+                                                <TableRow>
+                                                    <TableCell>
+                                                        Option
+                                                    </TableCell>
+                                                    <TableCell>
+                                                        Value
+                                                    </TableCell>
+                                                </TableRow>
+                                            </TableHead>
+                                            <TableBody>
+                                                {n.trackedEntityAttribute.optionSet.options.map(o => {
+                                                    return (
+                                                        <TableRow key={o.code} hover>
+                                                            <TableCell>
+                                                                {o.name}
+                                                            </TableCell>
+                                                            <TableCell>
+                                                                <InputField
+                                                                    label="Value"
+                                                                    type="text"
+                                                                    value={o.value}
+                                                                    onChange={(value) => o.setValue(value)}
+                                                                />
+                                                            </TableCell>
+                                                        </TableRow>
+                                                    );
+                                                })}
+                                            </TableBody>
+                                        </Table>
+                                        <List>
+                                            <ListItem button onClick={() => n.handleClose()}>
+                                                {/*<ListItemAvatar>
+                                                    <Avatar>
+                                                        <AddIcon/>
+                                                    </Avatar>
+                                                </ListItemAvatar>*/}
+                                                <ListItemText primary="Close"/>
+                                            </ListItem>
+                                        </List>
+                                    </div>
+                                </Dialog>
+                            </div>;
+                        }
                         return (
-                            <TableRow key={n.id} hover>
+                            <TableRow key={n.trackedEntityAttribute.id} hover>
                                 <TableCell>
-                                    {n.displayName}
+                                    {n.trackedEntityAttribute.displayName}
                                     {/*<pre>{JSON.stringify(n, null, 2)}</pre>*/}
                                 </TableCell>
                                 <TableCell>
-                                    <Checkbox disabled checked={n.unique}/>
+                                    <Checkbox disabled checked={n.trackedEntityAttribute.unique}/>
                                 </TableCell>
                                 <TableCell>
                                     <Checkbox disabled checked={n.mandatory}/>
@@ -109,13 +169,14 @@ class Step3 extends React.Component {
                                 <TableCell>
                                     <Select
                                         placeholder="Select one"
-                                        value={this.integrationStore.attributes[n.id]}
-                                        options={this.integrationStore.columns}
-                                        onChange={this.integrationStore.attributeChange(n.id, n.unique, {
-                                            valueType: n.valueType,
-                                            options: n.optionSet ? n.optionSet.options : null
-                                        })}
+                                        value={n.column}
+                                        options={program.columns}
+                                        onChange={n.setColumn}
                                     />
+                                </TableCell>
+
+                                <TableCell>
+                                    {de}
                                 </TableCell>
                             </TableRow>
                         );
@@ -126,17 +187,17 @@ class Step3 extends React.Component {
 
             <TablePagination
                 component="div"
-                count={this.integrationStore.programAttributes.length}
-                rowsPerPage={this.integrationStore.rowsPerPage}
-                page={this.integrationStore.page}
+                count={program.allAttributes}
+                rowsPerPage={program.rowsPerPage}
+                page={program.page}
                 backIconButtonProps={{
                     'aria-label': 'Previous Page',
                 }}
                 nextIconButtonProps={{
                     'aria-label': 'Next Page',
                 }}
-                onChangePage={this.integrationStore.handleChangePage}
-                onChangeRowsPerPage={this.integrationStore.handleChangeRowsPerPage}
+                onChangePage={program.handleChangePage}
+                onChangeRowsPerPage={program.handleChangeRowsPerPage}
             />
 
             <FormHelperText>

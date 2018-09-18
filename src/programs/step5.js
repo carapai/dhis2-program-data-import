@@ -35,6 +35,7 @@ class Step5 extends React.Component {
 
     render() {
         const {classes} = this.props;
+        const {program} = this.integrationStore;
         const {
             newTrackedEntityInstances,
             newEnrollments,
@@ -44,12 +45,12 @@ class Step5 extends React.Component {
             conflicts,
             duplicates,
             errors
-        } = this.integrationStore.processed;
+        } = program.processed;
         return (
             <div>
                 <Tabs>
                     <Tab label={<Badge className={classes.padding} color="secondary"
-                                       badgeContent={newTrackedEntityInstances.length}>New Tracked Entities</Badge>}>
+                                       badgeContent={newTrackedEntityInstances.length}>New Entities</Badge>}>
                         <Table>
                             <TableHead>
                                 <TableRow>
@@ -112,7 +113,7 @@ class Step5 extends React.Component {
                         </Table>
                     </Tab>
                     <Tab label={<Badge className={classes.padding} color="secondary"
-                                       badgeContent={trackedEntityInstancesUpdate.length}>Tracked Entity
+                                       badgeContent={trackedEntityInstancesUpdate.length}>Entity
                         Updates</Badge>}>
                         <Table>
                             <TableHead>
