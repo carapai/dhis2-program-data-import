@@ -19,11 +19,15 @@ class Step0 extends React.Component {
     }
 
     componentDidMount() {
-        // this.interval = setInterval(() => this.integrationStore.runAll(), 30000);
+        if (this.integrationStore.schedulerEnabled) {
+            this.interval = setInterval(() => this.integrationStore.runAll(), 30 * 1000);
+        }
     }
 
     componentWillUnmount() {
-        // clearInterval(this.interval);
+        if (this.integrationStore.schedulerEnabled) {
+            clearInterval(this.interval);
+        }
     }
 
     render() {

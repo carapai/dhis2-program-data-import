@@ -93,6 +93,19 @@ class Program extends React.Component {
 
     render() {
         const {classes, baseUrl} = this.props;
+        let finish = '';
+        if (this.integrationStore.program &&
+            (this.integrationStore.program.percentageInserted === 0 ||
+                this.integrationStore.program.percentageInserted === 100)) {
+            finish = <Button
+                variant="contained"
+                color={this.integrationStore.finishLabel === 'Finish' ? 'primary' : 'secondary'}
+                href={baseUrl}
+                className={this.integrationStore.activeStep < 5 ? classes.hidden : classes.button}
+            >
+                {this.integrationStore.finishLabel}
+            </Button>
+        }
         return (
             <div>
                 <Card className={classes.card}>
@@ -136,7 +149,7 @@ class Program extends React.Component {
                                                     disabled={this.integrationStore.activeStep === 0}
                                                     onClick={this.integrationStore.handleBack}
                                                     variant="contained"
-                                                    color="primary"
+                                                    color="secondary"
                                                     className={this.integrationStore.activeStep === 0 || this.integrationStore.activeStep === 6 ? classes.hidden : classes.button}
                                                 >
                                                     Back
@@ -147,7 +160,7 @@ class Program extends React.Component {
                                                     disabled={this.integrationStore.activeStep === 0}
                                                     onClick={this.integrationStore.saveMapping}
                                                     variant="contained"
-                                                    color="primary"
+                                                    color="default"
                                                     className={this.integrationStore.activeStep < 2 ? classes.hidden : classes.button}
                                                 >
                                                     Save
@@ -164,14 +177,7 @@ class Program extends React.Component {
                                                     {this.integrationStore.nextLabel}
                                                 </Button>
 
-                                                <Button
-                                                    variant="contained"
-                                                    color="primary"
-                                                    href={baseUrl}
-                                                    className={this.integrationStore.activeStep < 5 ? classes.hidden : classes.button}
-                                                >
-                                                    {this.integrationStore.finishLabel}
-                                                </Button>
+                                                {finish}
                                             </td>
                                         </tr>
                                         </tbody>

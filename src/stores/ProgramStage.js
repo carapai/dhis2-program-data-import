@@ -15,6 +15,11 @@ class ProgramStage {
     @observable orderBy = 'compulsory';
     @observable order = 'desc';
 
+    @observable eventDateIdentifiesEvent = false;
+    @observable completeEvents = true;
+    @observable longitudeColumn;
+    @observable latitudeColumn;
+
     constructor(id, name, displayName, repeatable, programStageDataElements) {
         this.id = id;
         this.name = name;
@@ -51,6 +56,13 @@ class ProgramStage {
         this.setOrder(order);
 
     };
+
+    @action makeEventDateAsIdentifier = event => this.eventDateIdentifiesEvent = event.target.checked;
+    @action markEventsAsComplete = event => this.completeEvents = event.target.checked;
+    @action setEventDateAsIdentifier = val => this.eventDateIdentifiesEvent = val;
+
+    @action setLongitudeColumn = value => this.longitudeColumn = value;
+    @action setLatitudeColumn = value => this.latitudeColumn = value;
 
     @computed
     get dataElements() {

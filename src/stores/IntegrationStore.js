@@ -32,6 +32,8 @@ class IntegrationStore {
     @observable expanded;
     @observable hasMappingsNameSpace;
 
+    @observable schedulerEnabled = true;
+
     @observable scheduleTypes = [{
         value: 'Second',
         label: 'Second',
@@ -86,10 +88,9 @@ class IntegrationStore {
     };
 
     @action runAll = () => {
-        this.mappings = this.mappings.map(mapping => {
-            mapping.scheduleProgram();
-            return mapping;
-        })
+        this.mappings.forEach(mapping => {
+            mapping.scheduleProgram(this.mappings);
+        });
     };
 
 
@@ -139,7 +140,7 @@ class IntegrationStore {
 
         model.organisationUnits = model.organisationUnits.toArray();
         model.createNewEvents = true;
-        model.createNewEnrollments = true;
+        // model.createNewEnrollments = true;
         model.dataStartRow = 2;
         model.headerRow = 1;
         model.orgUnitStrategy = {value: 'auto', label: 'auto'};
@@ -259,11 +260,11 @@ class IntegrationStore {
 
     @computed get disableNext() {
         if (this.activeStep === 2) {
-            return !this.program.data
+            return !this.program.data || this.program.data.length === 0
                 || !this.program.orgUnitColumn
                 || (!this.program.eventDateColumn && this.program.createNewEvents)
                 || ((!this.program.enrollmentDateColumn || !this.program.incidentDateColumn) && this.program.createNewEnrollments);
-                // || (!this.program.createNewEnrollments && !this.program.createNewEvents);
+            // || (!this.program.createNewEnrollments && !this.program.createNewEvents);
         } else if (this.activeStep === 3 && this.program.createNewEnrollments) {
             return !this.program.mandatoryAttributesMapped;
         } else if (this.activeStep === 4) {
@@ -333,6 +334,7 @@ class IntegrationStore {
                     psd.dataElement.valueType,
                     optionSet
                 );
+                dataElement.setAsIdentifier(psd.dataElement.identifiesEvent || false);
                 const programStageDataElement = new ProgramStageDataElement(psd.compulsory, dataElement);
                 if (psd.column) {
                     programStageDataElement.setColumn(psd.column);
@@ -346,6 +348,9 @@ class IntegrationStore {
                 ps.repeatable,
                 programStageDataElements
             );
+            programsStage.setEventDateAsIdentifier(ps.eventDateIdentifiesEvent || false);
+            programsStage.setLongitudeColumn(ps.longitudeColumn);
+            programsStage.setLatitudeColumn(ps.latitudeColumn);
             programStages = [...programStages, programsStage]
         });
 
@@ -400,10 +405,6 @@ class IntegrationStore {
             p.setTrackedEntityType(new TrackedEntityType(program.trackedEntityType.id))
         }
 
-        if (program.columns) {
-            p.setColumns(program.columns);
-        }
-
         p.setD2(this.d2);
         p.setOrder(program.order);
         p.setOrderBy(program.orderBy);
@@ -423,6 +424,8 @@ class IntegrationStore {
         p.setUploadMessage(program.uploadMessage);
         p.setOrgUnitColumn(program.orgUnitColumn);
         p.setMappingId(program.mappingId);
+        p.setLatitudeColumn(program.latitudeColumn);
+        p.setLongitudeColumn(program.longitudeColumn);
 
         return p;
     }

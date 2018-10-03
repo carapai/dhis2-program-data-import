@@ -29,17 +29,25 @@ class Step6 extends React.Component {
     constructor(props) {
         super(props);
         const {IntegrationStore} = props;
-        IntegrationStore.program.create();
         this.integrationStore = IntegrationStore;
+        this.integrationStore.program.create();
     }
 
     render() {
         const {classes} = this.props;
         const {errors, successes, conflicts} = this.integrationStore.program.processedResponses;
-        return <div>
-            <LinearProgress variant="determinate" value={this.integrationStore.program.percentageInserted}/>
-            {/*<pre>{JSON.stringify(this.integrationStore.processedResponses, null, 2)}</pre>*/}
+        let progress = '';
 
+        if (this.integrationStore.program.running) {
+            progress = <LinearProgress variant="determinate"
+                                       value={this.integrationStore.program.percentageInserted}
+                                       color="secondary"/>
+        } else {
+            progress = '';
+        }
+        return <div>
+            {progress}
+            {/*<pre>{JSON.stringify(this.integrationStore.processedResponses, null, 2)}</pre>*/}
             <Tabs>
                 <Tab label={<Badge className={classes.padding} color="secondary"
                                    badgeContent={successes.length}>Successes</Badge>}>
